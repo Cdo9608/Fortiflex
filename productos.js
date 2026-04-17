@@ -280,3 +280,65 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 250);
     });
 });
+/* ══════════════════════════════════════════
+   MODAL + DETALLE  –  Tuberías HDPE
+══════════════════════════════════════════ */
+(function () {
+    let _images = [];
+    let _current = 0;
+    const modal   = () => document.getElementById('detalle-modal');
+    const imgEl   = () => document.getElementById('detalle-modal-img');
+    const capEl   = () => document.getElementById('detalle-modal-cap');
+    const dotsEl  = () => document.getElementById('detalle-modal-dots');
+
+    function renderDots() {
+        const el = dotsEl();
+        el.innerHTML = '';
+        _images.forEach((_, i) => {
+            const b = document.createElement('button');
+            b.className = 'dm-dot' + (i === _current ? ' active' : '');
+            b.setAttribute('aria-label', 'Imagen ' + (i + 1));
+            b.addEventListener('click', () => goTo(i));
+            el.appendChild(b);
+        });
+    }
+
+    function goTo(idx) {
+        if (!_images.length) return;
+        _current = (idx + _images.length) % _images.length;
+        const img = imgEl();
+        img.style.opacity = '0';
+        setTimeout(() => {
+            img.src = _images[_current].src;
+            img.alt = _images[_current].cap || '';
+            capEl().textContent = _images[_current].cap || '';
+            img.style.opacity = '1';
+        }, 150);
+        renderDots();
+    }
+
+    window.abrirDetalleModal = function (id, btn) {
+        const raw = btn.getAttribute('data-images');
+        _images = JSON.parse(raw);
+        _current = 0;
+        goTo(0);
+        modal().classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.cerrarDetalleModal = function () {
+        modal().classList.remove('is-open');
+        document.body.style.overflow = '';
+    };
+
+    window.navDetalle = function (dir) {
+        goTo(_current + dir);
+    };
+
+    document.addEventListener('keydown', function (e) {
+        if (!modal().classList.contains('is-open')) return;
+        if (e.key === 'Escape')     cerrarDetalleModal();
+        if (e.key === 'ArrowLeft')  navDetalle(-1);
+        if (e.key === 'ArrowRight') navDetalle(1);
+    });
+}());
