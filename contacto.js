@@ -365,4 +365,3 @@ function mostrarMensajeCopiar(email) {
 }
 
 function initEmailCopyButtons() { /* onclick directo en HTML */ }
-

@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
     openBtn.addEventListener('click', e => {
         e.preventDefault();
         modal.classList.add('active');
+        modal.scrollTop = 0;
         document.body.style.overflow = 'hidden';
     });
 
